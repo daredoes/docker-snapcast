@@ -6,13 +6,12 @@ if test -f "$FILE"; then
 fi
 
 
-
 # nqptp &
 # rc-service dbus start
 
-# /usr/bin/dbus-daemon --system
-# avahi2dns &
-# nqptp &
-# (cd /snapweb && nvm use && yarn && yarn build)
+export DBUS_SYSTEM_BUS_ADDRESS=`dbus-daemon --fork --config-file=/usr/share/dbus-1/session.conf --print-address`
+# export DBUS_SYSTEM_BUS_ADDRESS=`dbus-daemon --system --nofork --nopidfile --print-address`
+avahi-daemon &
+nqptp &
 # rc-service shairport-sync zap
 snapserver
