@@ -16,7 +16,6 @@ RUN update-rc.d shairport-sync remove || true
 FROM shared
 # Install Python dependencies including pip and websockets
 
-
 # RUN python3 -m venv venv
 # RUN python3 -m pip install websockets websocket-client
 # RUN npm install --global yarn
