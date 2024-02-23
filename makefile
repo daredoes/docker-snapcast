@@ -1,6 +1,6 @@
 DOCKER_IMAGE=snapcast
 DOCKER_REPO=daredoes
-TAG_NAME=beta
+TAG_NAME=airplay2
 
 host-run:
 	docker run -d --network host \
@@ -10,7 +10,7 @@ host-run:
     -p 5000:5000 \
     -p 7000:7000 \
     -v /Users/dare/Git/docker-snapcast/myconfig:/config \
-    $(DOCKER_REPO)/$(DOCKER_IMAGE)
+    $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME)
 run:
 	docker run -d \
     -p 1780:1780 \
@@ -20,7 +20,7 @@ run:
     -p 7000:7000 \
     --privileged \
     -v /Users/dare/Git/docker-snapcast/myconfig:/config \
-    $(DOCKER_REPO)/$(DOCKER_IMAGE)
+    $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME)
 
 
 build:

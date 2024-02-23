@@ -29,4 +29,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: daredoes/snapcast:${{github.ref}}
+          tags: daredoes/snapcast:${{github.ref_name}}
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            SHAIRPORT_SYNC_BRANCH=development
+            NQPTP_BRANCH=development
+            SNAPCAST_BRANCH=master
