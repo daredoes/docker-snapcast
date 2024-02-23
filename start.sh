@@ -5,8 +5,6 @@ if test -f "$FILE"; then
     cp $FILE /etc/snapserver.conf
 fi
 
-
-
 # nqptp &
 # rc-service dbus start
 
@@ -15,4 +13,5 @@ fi
 nqptp &
 # (cd /snapweb && nvm use && yarn && yarn build)
 # rc-service shairport-sync zap
+echo "NQPTP Launched"
 snapserver

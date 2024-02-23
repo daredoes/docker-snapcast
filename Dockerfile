@@ -11,7 +11,7 @@ FROM shared as shared-builder
 RUN git clone https://github.com/mikebrady/shairport-sync.git /shairport-sync && cd /shairport-sync && autoreconf -fi && ./configure --sysconfdir=/etc --with-stdout --with-avahi --with-ssl=openssl --with-systemd --with-airplay-2 --with-metadata && make && cp shairport-sync /usr/local/bin/shairport-sync && cd .. && rm -rf shairport-sync
 RUN git clone https://github.com/mikebrady/nqptp.git /nqptp && cd /nqptp && autoreconf -fi && ./configure --with-systemd-startup && make && cp nqptp /usr/local/bin/nqptp && cd .. && rm -rf nqptp
 RUN git clone https://github.com/badaix/snapcast.git /snapcast
-RUN cd /snapcast && mkdir build && cd build && cmake .. -DBUILD_CLIENT=OFF -DBUILD_SERVER=ON && cmake --build . && cp -r /snapcast/bin/* /usr/local/bin && cd / && rm -rf /snapcast
+RUN cd /snapcast && mkdir build && cd build && cmake .. -DBUILD_CLIENT=OFF -DBUILD_SERVER=ON && cmake --build . && cp -r /snapcast/bin/* /usr/local/bin && mkdir -p /usr/share/snapserver/plug-ins && cp -r /snapcast/server/etc/plug-ins/* /usr/share/snapserver/plug-ins && cd / && rm -rf /snapcast
 RUN update-rc.d shairport-sync remove || true
 FROM shared
 # Install Python dependencies including pip and websockets
@@ -30,29 +30,24 @@ FROM shared
 
 
 ## Download snapweb compiled from github
-RUN mkdir -p /tmp/snapweb && rm -rf /usr/share/snapserver/snapweb &&  mkdir -p /usr/share/snapserver/snapweb && cd /tmp/snapweb && \
-    curl -LJO https://github.com/daredoes/snapweb/releases/download/v0.5.0/dist.zip && \
-    unzip dist.zip -d /usr/share/snapserver/snapweb
-
-WORKDIR /data
-WORKDIR /config
 
 EXPOSE 1704
 EXPOSE 1705
 EXPOSE 1780
 
-
-
-# COPY --from=builder /librespot/target/release/librespot /usr/local/bin/
 COPY ./config/snapserver.conf /etc
 COPY ./start.sh /
 RUN chmod +x /start.sh
 
+WORKDIR /usr/share/snapserver
+
 COPY --from=shared-builder /usr/local/bin/shairport-sync /usr/local/bin/shairport-sync
 COPY --from=shared-builder /usr/local/bin/snapserver /usr/local/bin/snapserver
+COPY --from=shared-builder /usr/share/snapserver/plug-ins/ /usr/share/snapserver/plug-ins/
 COPY --from=shared-builder /usr/local/bin/nqptp /usr/local/bin/nqptp
 COPY --from=builder /usr/local/cargo/bin/librespot /usr/local/bin/librespot
 
+RUN curl -LJO https://github.com/daredoes/snapweb/releases/download/v0.5.0/dist.zip && unzip dist.zip -d /usr/share/snapserver/snapweb
 
 
 ENTRYPOINT [ "/start.sh" ]
