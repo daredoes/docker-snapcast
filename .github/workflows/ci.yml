@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: daredoes/snapcast:${{ steps.tag-formatter.outputs.tag }}
+          tags: daredoes/snapcast:${{ github.ref_name }},daredoes/snapcast:${{ steps.tag-formatter.outputs.tag }}
           platforms: linux/amd64,linux/arm64
           build-args: |
             SHAIRPORT_SYNC_BRANCH=development
