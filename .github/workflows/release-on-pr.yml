@@ -40,12 +40,22 @@ jobs:
           echo "version=v$timestamp" >> $GITHUB_OUTPUT
         shell: bash
       # Drafts your next Release notes as Pull Requests are merged into "master"
-      - uses: release-drafter/release-drafter@v5
-        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+      - uses: ncipollo/release-action@v1
         with:
-            name: "${{steps.version.outputs.tag}} Release ${{steps.version.outputs.version}}"
-            tag: "${{steps.version.outputs.tag}}-${{steps.version.outputs.version}}"
-        #   config-name: my-config.yml
-        #   disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "release.tar.gz,foo/*.txt"
+          bodyFile: "body.md"
+          name: "${{steps.version.outputs.tag}} Release ${{steps.version.outputs.version}}"
+          tag: "${{steps.version.outputs.tag}}-${{steps.version.outputs.version}}"
+          skipIfReleaseExists: true
+          makeLatest: true
+          generateReleaseNotes: true
+          
+      # - uses: release-drafter/release-drafter@v5
+      #   # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+      #   with:
+      #       name: "${{steps.version.outputs.tag}} Release ${{steps.version.outputs.version}}"
+      #       tag: "${{steps.version.outputs.tag}}-${{steps.version.outputs.version}}"
+      #   #   config-name: my-config.yml
+      #   #   disable-autolabeler: true
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
