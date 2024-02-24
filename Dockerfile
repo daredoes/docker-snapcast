@@ -14,9 +14,9 @@ RUN git clone https://github.com/badaix/snapcast.git /snapcast
 RUN cd /snapcast && mkdir build && cd build && cmake .. -DBUILD_CLIENT=OFF -DBUILD_SERVER=ON && cmake --build . && cp -r /snapcast/bin/* /usr/local/bin && mkdir -p /usr/share/snapserver/plug-ins && cp -r /snapcast/server/etc/plug-ins/* /usr/share/snapserver/plug-ins && cd / && rm -rf /snapcast
 RUN update-rc.d shairport-sync remove || true
 FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y curl git libboost-all-dev libasound2-dev libpulse-dev libvorbisidec-dev libvorbis-dev libopus-dev libflac-dev libsoxr-dev alsa-utils libavahi-client-dev avahi-daemon libexpat1-dev python3-pip nano python3-websockets libpopt-dev libconfig-dev libssl-dev build-essential libavahi-client-dev zip vim-nox libplist-dev libsodium-dev libgcrypt-dev libavutil-dev libavcodec-dev libavformat-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends curl git libboost-all-dev libasound2-dev libpulse-dev libvorbisidec-dev libvorbis-dev libopus-dev libflac-dev libsoxr-dev alsa-utils libavahi-client-dev avahi-daemon libexpat1-dev python3-pip nano python3-websockets libpopt-dev libconfig-dev libssl-dev build-essential libavahi-client-dev unzip vim-nox libplist-dev libsodium-dev libgcrypt-dev libavutil-dev libavcodec-dev libavformat-dev \
     && apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /tmp/\* /var/tmp/*
 RUN update-rc.d shairport-sync remove || true
 # Install Python dependencies including pip and websockets
 
