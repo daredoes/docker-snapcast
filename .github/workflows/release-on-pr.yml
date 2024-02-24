@@ -47,6 +47,7 @@ jobs:
           skipIfReleaseExists: true
           makeLatest: true
           generateReleaseNotes: true
+          token: ${{ secrets.PAT }}
           
       # - uses: release-drafter/release-drafter@v5
       #   # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
