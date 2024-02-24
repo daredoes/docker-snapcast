@@ -4,7 +4,7 @@ on:
   push:
     # branches to consider in the event; optional, defaults to all
     branches:
-      - '*'
+      - 'publish/*'
   # # pull_request event is required only for autolabeler
   # pull_request:
   #   # Only following types are handled by the action, but one can default to all as well
@@ -30,7 +30,7 @@ jobs:
         id: version
         run: | # Use a multi-line string for complex commands
           # Get the version tag
-          tag=$(echo "${{ github.ref_name }}" | sed 's/-v.*$//')
+          tag=$(echo "${{ github.ref_name }}" | sed 's/^publish\///')
           
           # Generate the timestamp in the desired format
           timestamp=$(TZ='America/Los_Angeles' date +'%Y.%m.%e_%k.%M')
@@ -39,15 +39,15 @@ jobs:
           version_with_timestamp="$tag-v$timestamp"
           
           # Write the combined version string to the GITHUB_OUTPUT
-          echo "tag=$version_with_timestamp" >> $GITHUB_OUTPUT
+          echo "tag=$tag" >> $GITHUB_OUTPUT
           echo "version='v$timestamp'" >> $GITHUB_OUTPUT
         shell: bash
       # Drafts your next Release notes as Pull Requests are merged into "master"
       - uses: release-drafter/release-drafter@v5
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
-            name: "${{github.ref_name}} Release ${{steps.version.outputs.version}}"
-            tag: "${{steps.version.outputs.tag}}"
+            name: "${{steps.version.outputs.tag}} Release ${{steps.version.outputs.version}}"
+            tag: "${{steps.version.outputs.tag}}-${{steps.version.outputs.version}}"
         #   config-name: my-config.yml
         #   disable-autolabeler: true
         env:
