@@ -33,10 +33,7 @@ jobs:
           tag=$(echo "${{ github.ref_name }}" | sed 's/^publish\///')
           
           # Generate the timestamp in the desired format
-          timestamp=$(TZ='America/Los_Angeles' date +'%Y.%m.%e_%k.%M')
-          
-          # Combine the tag and timestamp into a single output variable
-          version_with_timestamp="$tag-v$timestamp"
+          timestamp=$(TZ='America/Los_Angeles' date +%Y.%m.%e_%k.%M)
           
           # Write the combined version string to the GITHUB_OUTPUT
           echo "tag=$tag" >> $GITHUB_OUTPUT
