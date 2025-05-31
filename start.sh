@@ -11,6 +11,7 @@ fi
 # /usr/bin/dbus-daemon --system
 # avahi2dns &
 nqptp &
+# systemctl enable avahi-daemon
 # (cd /snapweb && nvm use && yarn && yarn build)
 # rc-service shairport-sync zap
 echo "NQPTP Launched"

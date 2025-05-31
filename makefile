@@ -1,6 +1,7 @@
 DOCKER_IMAGE=snapcast
 DOCKER_REPO=daredoes
-TAG_NAME=airplay2-test
+TAG_NAME=$(shell date +%Y.%m.%d.%H.%M.%S)
+PLATFORMS=linux/amd64,linux/arm64
 
 host-run:
 	docker run -d --network host \
@@ -22,15 +23,11 @@ run:
     -v /Users/dare/Git/docker-snapcast/myconfig:/config \
     $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME)
 
-
 build:
-	docker build --platform=linux/amd64 -t $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME) . --build-arg SHAIRPORT_SYNC_BRANCH=development --build-arg NQPTP_BRANCH=development --build-arg SNAPCAST_BRANCH=master
-	# docker build --platform=linux/arm64 -t $(DOCKER_REPO)/$(DOCKER_IMAGE) .
-
+	docker buildx build --platform=$(PLATFORMS) -t $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME) . --build-arg SHAIRPORT_SYNC_BRANCH=development --build-arg NQPTP_BRANCH=development --build-arg SNAPCAST_BRANCH=master
 slim:
 	slim build --target $(DOCKER_REPO)/$(DOCKER_IMAGE) --tag $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME) --include-path /config --include-path /usr/share/snapserver/snapweb
 push:
-	# slim build --target $(DOCKER_REPO)/$(DOCKER_IMAGE) --tag $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME) --include-path /config --include-path /usr/share/snapserver/snapweb
 	docker push $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME)
 
 .PHONY: build push 
