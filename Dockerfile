@@ -3,7 +3,9 @@ RUN apt-get update && apt-get install -y curl build-essential cmake autoconf git
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 FROM shared AS librespot-builder
-RUN cargo install librespot
+# install from source because of librespot bug https://github.com/librespot-org/librespot/issues/1527
+RUN git clone https://github.com/librespot-org/librespot /librespot && cd /librespot && cargo build --release
+# RUN cargo install librespot
 
 FROM shared AS shairport-builder
 RUN git clone https://github.com/mikebrady/shairport-sync.git /shairport-sync && cd /shairport-sync && autoreconf -fi && ./configure --sysconfdir=/etc --with-stdout --with-avahi --with-ssl=openssl --with-systemd --with-airplay-2 --with-metadata && make && cp shairport-sync /usr/local/bin/shairport-sync && cd .. && rm -rf shairport-sync
@@ -32,6 +34,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     unzip \
     ca-certificates \
+    libswresample4 \
+    libavcodec59 \
+    libavutil57 \
+    libavformat59 \
+    libplist3 \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 FROM base
@@ -53,7 +60,7 @@ COPY --from=shairport-builder /usr/local/bin/shairport-sync /usr/local/bin/shair
 COPY --from=snapcast-builder /usr/local/bin/snapserver /usr/local/bin/snapserver
 COPY --from=snapcast-builder /usr/share/snapserver/plug-ins/ /usr/share/snapserver/plug-ins/
 COPY --from=nqptp-builder /usr/local/bin/nqptp /usr/local/bin/nqptp
-COPY --from=librespot-builder /usr/local/cargo/bin/librespot /usr/local/bin/librespot
+COPY --from=librespot-builder /librespot/target/release/librespot /usr/local/bin/librespot
 
 RUN curl -LJO https://github.com/daredoes/snapweb/releases/download/v0.5.0/dist.zip && unzip dist.zip -d /usr/share/snapserver/snapweb && rm -rf dist.zip
 
