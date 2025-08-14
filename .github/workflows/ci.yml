@@ -2,7 +2,7 @@ name: ci
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 jobs:
   docker:
@@ -33,7 +33,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: daredoes/snapcast:${{ github.ref_name }},daredoes/snapcast:${{ steps.tag-formatter.outputs.tag }}
+          tags: |
+            daredoes/snapcast:${{ steps.tag-formatter.outputs.tag }}
+            daredoes/snapcast:latest
           platforms: linux/amd64,linux/arm64
           build-args: |
             SHAIRPORT_SYNC_BRANCH=development
