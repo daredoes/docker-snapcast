@@ -12,6 +12,10 @@ jobs:
         id: tag-formatter
         run: echo "tag=$(echo "${{ github.ref_name }}" | sed 's/-v.*$//')" >> $GITHUB_OUTPUT
         shell: bash
+      - name: Tag Formatter
+        id: now-tag-formatter
+        run: echo "tag=$(date +%Y.%m.%d.%H.%M.%S)" >> $GITHUB_OUTPUT
+        shell: bash
       -
         name: Checkout
         uses: actions/checkout@v4
@@ -35,6 +39,7 @@ jobs:
           push: true
           tags: |
             daredoes/snapcast:${{ steps.tag-formatter.outputs.tag }}
+            daredoes/snapcast:${{ steps.now-tag-formatter.outputs.tag }}
             daredoes/snapcast:latest
           platforms: linux/amd64,linux/arm64
           build-args: |
