@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libavutil57 \
     libavformat59 \
     libplist3 \
-    python3-websockets \
+    python3-pip \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 FROM base
@@ -64,6 +64,5 @@ COPY --from=nqptp-builder /usr/local/bin/nqptp /usr/local/bin/nqptp
 COPY --from=librespot-builder /librespot/target/release/librespot /usr/local/bin/librespot
 
 RUN curl -LJO https://github.com/daredoes/snapweb/releases/download/v0.5.0/dist.zip && unzip dist.zip -d /usr/share/snapserver/snapweb && rm -rf dist.zip
-
-
+RUN /usr/bin/env pip install websocket-client --break-system-packages
 ENTRYPOINT [ "/start.sh" ]

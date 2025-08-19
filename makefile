@@ -2,7 +2,7 @@ DOCKER_IMAGE=snapcast
 DOCKER_REPO=daredoes
 TAG_NAME=$(shell date +%Y.%m.%d.%H.%M.%S)
 PLATFORMS=linux/amd64,linux/arm64
-TAG_NAME_TO_RUN=2025.08.13.15.56.42
+TAG_NAME_TO_RUN=2025.08.18.23.08.27
 
 host-run:
 	docker run -d --network host \
@@ -23,7 +23,6 @@ run:
     -p 7000:7000 \
     --privileged \
     -v /Users/dare/Git/docker-snapcast/myconfig:/config \
-    --mount type=bind,source=/tmp/navififo,target=/tmp/navififo \
     $(DOCKER_REPO)/$(DOCKER_IMAGE):$(TAG_NAME_TO_RUN)
 
 build:
