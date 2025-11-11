@@ -2,6 +2,8 @@ This container packages [Snapcast](https://github.com/badaix/snapcast), a multi-
 
 This container includes both snapserver, the broadcaster, and snapclient, the receiver. snapserver distributes audio read from a pipe. snapserver plays audio from snapserver into alsa, pulseaudio, or portaudio.
 
+This also includes librespot, and builds from source whenever the repository builds its docker image.
+
 ### Examples
 
 Broadcast audio from /tmp/pcm-pipe:
